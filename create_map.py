@@ -369,7 +369,16 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
   box-shadow:0 2px 12px rgba(0,0,0,.15);max-width:300px;font-size:13px;
   max-height:95vh;overflow-y:auto;
 }}
-.info h2{{margin:0 0 12px;font-size:16px;color:#1a237e}}
+.info-head{{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}}
+.info h2{{margin:0;font-size:16px;color:#1a237e}}
+.legend-toggle{{
+  border:1px solid #cfd8dc;background:#fff;color:#1a237e;
+  border-radius:4px;width:28px;height:24px;padding:0;
+  cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+}}
+.legend-toggle:hover{{background:#f5f7fa}}
+.legend-toggle svg{{width:14px;height:14px;display:block}}
 .leg{{display:flex;align-items:center;margin:7px 0}}
 .leg-line{{width:28px;height:0;margin-right:8px;flex-shrink:0}}
 .leg-icon{{width:36px;height:18px;margin-right:8px;flex-shrink:0;text-align:center}}
@@ -386,7 +395,18 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
 <div id="map"></div>
 
 <div class="info">
-  <h2>Strait of Gibraltar</h2>
+  <div class="info-head">
+    <h2>Strait of Gibraltar</h2>
+    <button id="legendToggle" class="legend-toggle" type="button" aria-label="Minimize legend" title="Minimize legend">
+      <svg id="legendIconMin" viewBox="0 0 16 16" aria-hidden="true">
+        <line x1="3" y1="8" x2="13" y2="8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <svg id="legendIconMax" viewBox="0 0 16 16" aria-hidden="true" style="display:none">
+        <rect x="3.2" y="3.2" width="9.6" height="9.6" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      </svg>
+    </button>
+  </div>
+  <div id="legendBody">
 
   <div class="leg">
     <label><input type="checkbox" checked data-layer="isolines"/>
@@ -437,11 +457,11 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
   </div>
 
   <div class="stats">
-    <p>{n_iso} isoline segments &middot; {n_pax} passenger routes</p>
     <p>{n_cgo} cargo routes &middot; {n_fsh} fishing tracks</p>
     <p>12 lighthouses</p>
     <p style="margin-top:6px;font-style:italic">Click features for info.</p>
   </div>
+</div>
 </div>
 
 <script>
@@ -734,6 +754,24 @@ document.querySelectorAll('.info input[name="basemap"]').forEach(function(rb) {{
     map.addLayer(baseMaps[this.value]);
   }});
 }});
+
+// Legend panel minimize/maximize
+var legendToggleBtn = document.getElementById('legendToggle');
+var legendBody = document.getElementById('legendBody');
+var legendIconMin = document.getElementById('legendIconMin');
+var legendIconMax = document.getElementById('legendIconMax');
+if (legendToggleBtn && legendBody) {{
+  legendToggleBtn.addEventListener('click', function() {{
+    var collapsed = legendBody.style.display === 'none';
+    legendBody.style.display = collapsed ? 'block' : 'none';
+    if (legendIconMin && legendIconMax) {{
+      legendIconMin.style.display = collapsed ? 'block' : 'none';
+      legendIconMax.style.display = collapsed ? 'none' : 'block';
+    }}
+    legendToggleBtn.setAttribute('aria-label', collapsed ? 'Minimize legend' : 'Maximize legend');
+    legendToggleBtn.title = collapsed ? 'Minimize legend' : 'Maximize legend';
+  }});
+}}
 
 L.control.scale({{imperial: false}}).addTo(map);
 </script>
