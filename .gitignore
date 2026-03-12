@@ -1,0 +1,19 @@
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+.venv/
+venv/
+env/
+
+.DS_Store
+Thumbs.db
+
+# Local Vercel project link metadata
+.vercel/
+deploy/.vercel/
+
+# Generated/large local artifacts
+data/bathymetry.tif
+data/*.nc
